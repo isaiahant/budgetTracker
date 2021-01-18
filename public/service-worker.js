@@ -16,15 +16,18 @@ self.addEventListener('install', event => {
 })
 
 self.addEventListener('fetch', event => {
-  fetch(event.request)
+  event.respondWith(
+
+    fetch(event.request)
     .catch(err => {
       return caches.match(event.request)
-        .then(res => {
-          if (res) {
-            reurn res
-          } else if (event.request.headers.get('accept').includes('text/html')) {
-            return caches.match('/')
-          }
-        })
+      .then(res => {
+        if (res) {
+          reurn res
+        } else if (event.request.headers.get('accept').includes('text/html')) {
+          return caches.match('/')
+        }
+      })
     })
-})
+    )
+  })
