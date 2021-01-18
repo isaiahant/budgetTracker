@@ -5,10 +5,11 @@ self.addEventListener('install', event => {
         console.log('Opened cache')
         return cache.addAll([
           '/',
-          '/index.html',
-          '/styles.css',
-          'index.js',
           '/db.js',
+          '/index.html',
+          'index.js',
+          '/manifest.json'
+          '/styles.css',
           '/icons/icon-192x192.png',
           '/icons/icon-512x512.png'
         ])
@@ -18,17 +19,14 @@ self.addEventListener('install', event => {
 
 self.addEventListener('fetch', event => {
   event.respondWith(
-
-    fetch(event.request)
-    .catch(err => {
-      return caches.match(event.request)
-      .then(res => {
-        if (res) {
-          reurn res
-        } else if (event.request.headers.get('accept').includes('text/html')) {
-          return caches.match('/')
-        }
+    fetch(event.request).catch(err => {
+        return caches.match(event.request).then(res => {
+            if (res) {
+              reurn res
+            } else if (event.request.headers.get('accept').includes('text/html')) {
+              return caches.match('/')
+            }
+          })
       })
-    })
-    )
-  })
+  )
+})
